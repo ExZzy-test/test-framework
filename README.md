@@ -4,18 +4,6 @@ A ready-to-run Playwright JavaScript framework that demonstrates:
 
 - UI automation against [SauceDemo](https://www.saucedemo.com)
 - API automation against [Restful-Booker](https://restful-booker.herokuapp.com)
-- reusable Page Objects, API client layer, fixtures, and environment config
-- GitHub Actions CI pipeline with Playwright HTML report upload
-
-## Why UI and API are split across two demo systems
-
-SauceDemo is a strong target for UI flows such as login, cart, checkout, and logout.
-For API coverage in a take-home assignment, this framework uses Restful-Booker because it is a public demo API designed for CRUD/auth automation practice.
-
-This keeps the framework stable and interview-friendly:
-
-- UI suite proves browser automation on a realistic ecommerce demo app
-- API suite proves request modeling, auth handling, contract checks, and CI execution
 
 ## Tech stack
 
