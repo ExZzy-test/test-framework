@@ -139,19 +139,19 @@ jobs:
         uses: actions/setup-node@v6
         with:
           node-version: lts/*
-          cache: yarn
+          cache: npm
 
       - name: Install dependencies
         run: |
           corepack enable
-          yarn install
+          npm install
 
       - name: Run security scan
         continue-on-error: false
         shell: bash
         run: |
           set +e
-          yarn npm audit --severity high --json > audit.json
+          npm npm audit --severity high --json > audit.json
           AUDIT_EXIT=$?
           set -e
 
