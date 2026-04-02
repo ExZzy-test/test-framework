@@ -142,20 +142,18 @@ jobs:
           cache: npm
 
       - name: Install dependencies
-        run: |
-          corepack enable
-          npm install
+        run: npm ci
 
       - name: Run security scan
         continue-on-error: false
         shell: bash
         run: |
           set +e
-          npm npm audit --severity high --json > audit.json
+          npm audit --audit-level=high --json > audit.json
           AUDIT_EXIT=$?
           set -e
 
-          node -e "const fs=require('fs'); const lines=fs.readFileSync('audit.json','utf8').split(/\r?\n/).filter(Boolean); let summary={high:0,critical:0,total:0}; for(const line of lines){ try{ const obj=JSON.parse(line); if(obj.type==='auditSummary' && obj.data && obj.data.vulnerabilities){ const v=obj.data.vulnerabilities; summary.high=Number(v.high||0); summary.critical=Number(v.critical||0); summary.total=Number(v.total||0); } } catch {} } const text=['## Security Scan Summary','', '- High vulnerabilities: '+summary.high, '- Critical vulnerabilities: '+summary.critical, '- Total vulnerabilities: '+summary.total].join('\n'); fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY,text+'\n');"
+          node -e "const fs=require('fs'); let summary={high:0,critical:0,total:0}; try{ const obj=JSON.parse(fs.readFileSync('audit.json','utf8')); const v=(obj.metadata&&obj.metadata.vulnerabilities)||{}; summary.high=Number(v.high||0); summary.critical=Number(v.critical||0); summary.total=Number(v.total||0); }catch{} const text=['## Security Scan Summary','', '- High vulnerabilities: '+summary.high, '- Critical vulnerabilities: '+summary.critical, '- Total vulnerabilities: '+summary.total].join('\n'); fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY,text+'\n');"
 
           if [ "$AUDIT_EXIT" -ne 0 ]; then
             exit "$AUDIT_EXIT"
